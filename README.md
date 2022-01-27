@@ -24,6 +24,11 @@ npm start
 ```
 Runs the built app in production mode.
 
+```
+nvm use
+```
+Switch to the currently recommended Node version
+
 ## Resources Used
 
 * [Build a SaaS product with Next.js, Supabase and Stripe](https://egghead.io/courses/build-a-saas-product-with-next-js-supabase-and-stripe-61f2bc20) by Jon Meyer

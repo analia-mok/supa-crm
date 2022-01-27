@@ -1,4 +1,5 @@
 import { supabase } from '../utils/supabase';
+import Link from 'next/link';
 
 interface Organization {
   id: string,
@@ -12,11 +13,20 @@ interface Organization {
   postal_code?: string,
 }
 
-export default function Home(props: { organizations: Organization[] }) {
+interface HomeProps {
+  organizations: Organization[]
+}
+
+export default function Home(props: HomeProps) {
+  const { organizations } = props;
+  console.log(supabase.auth.user());
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      {props.organizations.map(org => (
-        <p key={org.id}>{org.name}</p>
+      {organizations.map(org => (
+        <Link key={org.id} href={`/${org.id}`}>
+          <a className='hover:underline'>{org.name}</a>
+        </Link>
       ))}
     </div>
   )
