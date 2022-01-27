@@ -1,6 +1,7 @@
 import { supabase } from '../utils/supabase';
 import Link from 'next/link';
 
+// TODO: Move into a types folder.
 interface Organization {
   id: string,
   name: string,

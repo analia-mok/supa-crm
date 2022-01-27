@@ -29,6 +29,10 @@ nvm use
 ```
 Switch to the currently recommended Node version
 
+## Environment Variables
+
+TODO: Determine appropriate Netlify Dev command to pull in env vars.
+
 ## Resources Used
 
 * [Build a SaaS product with Next.js, Supabase and Stripe](https://egghead.io/courses/build-a-saas-product-with-next-js-supabase-and-stripe-61f2bc20) by Jon Meyer
