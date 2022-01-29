@@ -1,4 +1,5 @@
 import { supabase } from '../utils/supabase';
+import { useUser } from '../context/user';
 import Link from 'next/link';
 
 // TODO: Move into a types folder.
@@ -20,7 +21,8 @@ interface HomeProps {
 
 export default function Home(props: HomeProps) {
   const { organizations } = props;
-  console.log(supabase.auth.user());
+  const { user } = useUser();
+  console.log(user);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2">
