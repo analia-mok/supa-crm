@@ -9,25 +9,25 @@
 
 ## How To Use
 
+Start the development server:
 ```
 npm run dev
 ```
-Starts the development server.
 
+Build the app for production:
 ```
 npm run build
 ```
-Builds the app for production.
 
+Run the built app in production mode:
 ```
 npm start
 ```
-Runs the built app in production mode.
 
+Switch to the currently recommended Node version:
 ```
 nvm use
 ```
-Switch to the currently recommended Node version
 
 ## Environment Variables
 
