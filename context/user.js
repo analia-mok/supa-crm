@@ -1,11 +1,14 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { supabase } from '../utils/supabase';
 import { useRouter } from "next/router";
+import axios from "axios";
+import ProfileClient from "../lib/Models/Profile";
 
 const Context = createContext();
 
 const Provider = ({ children }) => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(supabase.auth.user());
 
   useEffect(() => {
@@ -13,16 +16,14 @@ const Provider = ({ children }) => {
       const sessionUser = supabase.auth.user();
 
       if (sessionUser) {
-        const { data: profile } = await supabase
-          .from('profile')
-          .select('*')
-          .eq('id', sessionUser.id)
-          .single();
+        const profile = await ProfileClient.getSingle(sessionUser.id);
 
         setUser({
           ...sessionUser,
           ...profile
         });
+
+        setIsLoading(false);
       }
     }
 
@@ -34,6 +35,13 @@ const Provider = ({ children }) => {
     })
   }, []);
 
+  // Update supabase cookie whenever the user object changes.
+  useEffect(() => {
+    axios.post('/api/set-supabase-cookie', {
+      event: user ? 'SIGNED_IN' : 'SIGNED_OUT',
+      session: supabase.auth.session()
+    })
+  }, [user]);
 
   const login = async () => {
     await supabase.auth.signIn({
@@ -50,7 +58,8 @@ const Provider = ({ children }) => {
   const exposed = {
     user,
     login,
-    logout
+    logout,
+    isLoading
   };
 
   return (
