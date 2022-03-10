@@ -1,19 +1,7 @@
 import { supabase } from '../utils/supabase';
 import { useUser } from '../context/user';
 import Link from 'next/link';
-
-// TODO: Move into a types folder.
-interface Organization {
-  id: string,
-  name: string,
-  email?: string,
-  phone?: string,
-  address1?: string,
-  address2?: string,
-  city?: string,
-  state?: string,
-  postal_code?: string,
-}
+import { Organization } from '../lib/clients';
 
 interface HomeProps {
   organizations: Organization[]

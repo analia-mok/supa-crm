@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 import { supabase } from '../utils/supabase';
 import { useRouter } from "next/router";
 import axios from "axios";
-import ProfileClient from "../lib/Models/Profile";
+import ProfileClient from "../lib/clients";
 
 const Context = createContext();
 
@@ -16,7 +16,7 @@ const Provider = ({ children }) => {
       const sessionUser = supabase.auth.user();
 
       if (sessionUser) {
-        const profile = await ProfileClient.getSingle(sessionUser.id);
+        const profile = await (new ProfileClient).getSingle(sessionUser.id);
 
         setUser({
           ...sessionUser,

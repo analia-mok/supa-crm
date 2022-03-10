@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase';
 import Video from 'react-player';
+import { Organization } from '../lib/clients';
+import { GetStaticProps } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 
-const OrganizationDetails = ({ organization }) => {
+interface OrganizationDetailsProps {
+  organization: Organization
+}
+
+const OrganizationDetails = (props: OrganizationDetailsProps) => {
+  const { organization } = props;
   const [videoUrl, setVideoUrl] = useState();
 
   // @todo replace with actual CRM features.
@@ -30,9 +38,11 @@ const OrganizationDetails = ({ organization }) => {
 };
 
 export const getStaticPaths = async () => {
-  const { data: organizations } = await supabase.from('organization').select('id');
+  const { data: organizations } = await supabase
+    .from('organization')
+    .select('id');
 
-  const paths = organizations.map(({ id }) => {
+  const paths = organizations?.map(({ id }) => {
     return {
       params: {
         id: id.toString()
@@ -46,7 +56,12 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = async ({ params: { id } }) => {
+interface OrganizationDetailParams extends ParsedUrlQuery {
+  id: string
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { id } = params as OrganizationDetailParams;
   const { data: organization } = await supabase
     .from('organization')
     .select('*')
