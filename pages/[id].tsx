@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase';
 import Video from 'react-player';
-import { Organization } from '../lib/clients';
 import { GetStaticProps } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import { Organization } from '../lib/types';
 
 interface OrganizationDetailsProps {
   organization: Organization

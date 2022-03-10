@@ -1,15 +1,7 @@
 import { stripe } from '../utils/stripe';
 import { useUser } from '../context/user';
 import axios from 'axios';
-
-// @todo Organize all models.
-interface Plan {
-  id: string
-  name: string
-  price: number
-  interval: string
-  currency: string
-}
+import { Plan } from '../lib/types';
 
 interface PricingPageProps {
   plans: Plan[]
