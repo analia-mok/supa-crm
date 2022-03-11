@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Sidebar />
         <div className='flex-grow'>
           <Nav />
-          <main className='px-10 py-8'>
+          <main className='px-10 py-8 max-w-5xl'>
             <Component {...pageProps} />
           </main>
         </div>

@@ -18,7 +18,7 @@ export interface Organization {
   postal_code?: string,
 }
 
-interface Plan {
+export interface Plan {
   id: string
   name: string
   price: number

@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../utils/supabase';
-import Video from 'react-player';
+import { ArrowNarrowLeftIcon } from '@heroicons/react/solid';
 import { GetStaticProps } from 'next';
+import { Organization } from '../../lib/types';
 import { ParsedUrlQuery } from 'querystring';
-import { Organization } from '../lib/types';
+import { supabase } from '../../utils/supabase';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Video from 'react-player';
 
 interface OrganizationDetailsProps {
   organization: Organization
@@ -26,14 +28,21 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
 
   useEffect(() => {
     getPremiumContent();
-  }, []);
+  });
 
   return (
-    <article className='container mx-auto max-w-5xl px-8 py-12'>
-      <h1 className='text-3xl mb-8'>{organization.name}</h1>
-      <p>{organization.address1}</p>
-      {!!videoUrl && <Video url={videoUrl} width="100%" />}
-    </article>
+    <div>
+      <section className='mb-8'>
+        <Link href="/organizations">
+          <a className='inline-flex text-slate-800 items-center content-center hover:underline hover:text-slate-600 transition-colors duration-100'><ArrowNarrowLeftIcon className='w-5 h-5 text-slate-800 mr-2'/> Back to Organizations</a>
+        </Link>
+      </section>
+      <article>
+        <h1 className='text-3xl mb-4 font-bold'>{organization.name}</h1>
+        <p>{organization.address1}</p>
+        {!!videoUrl && <Video url={videoUrl} width="100%" />}
+      </article>
+    </div>
   );
 };
 

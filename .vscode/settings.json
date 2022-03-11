@@ -2,6 +2,5 @@
   "files.associations": {
     "*.js": "javascriptreact"
   },
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true
+  "editor.formatOnSave": true
 }
