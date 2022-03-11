@@ -1,13 +1,38 @@
 import { ArrowNarrowLeftIcon } from "@heroicons/react/solid";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { supabase } from "../../utils/supabase";
 
 export default function CreateOrganization() {
+  const [error, setError] = useState();
+  const [result, setResult] = useState('');
+
+  // TODO: Auth protect page.
   const create = async (event: FormEvent) => {
     event.preventDefault();
 
+    setError(null);
+    setResult('');
+
     // TODO: Implement handler to create organization in supabase.
-    // TODO: Implement success & error states.
+    const formData = new FormData(event.target as HTMLFormElement);
+    const organization: {[key: string]: any} = {};
+
+    for (var pair of formData.entries()) {
+      const column: string = pair[0];
+      organization[column] = pair[1];
+    }
+
+    const { data, error } = await supabase
+      .from('organization')
+      .insert(organization);
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setResult('Success!');
+    }
+
     return true;
   }
 
@@ -19,6 +44,12 @@ export default function CreateOrganization() {
         </Link>
       </section>
       <section className="max-w-5xl">
+        {error && (
+          <p className="bg-rose-200 text-rose-800 max-w-lg px-4 py-2 rounded-md mb-8">{error}</p>
+        )}
+        {result && (
+          <p className="bg-green-200 text-green-800 max-w-lg px-4 py-2 rounded-md mb-8">{result}</p>
+        )}
         <form onSubmit={create} className="max-w-lg">
           <div className="flex flex-wrap md:flex-nowrap mb-6">
             <label htmlFor="name" className="block w-full">
