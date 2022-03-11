@@ -1,14 +1,11 @@
-import { supabase } from "../utils/supabase";
-import { Profile } from "./types";
+import { supabase } from '../utils/supabase';
+import { Profile } from './types';
 
 class BaseClient {
-
   _table = '';
 
   async create(value: any) {
-    const { error } = await supabase
-      .from(this._table)
-      .insert([value]);
+    const { error } = await supabase.from(this._table).insert([value]);
 
     if (error) {
       console.error(error.message);
@@ -62,17 +59,13 @@ class BaseClient {
    */
   async get(columns = '*'): Promise<any> {
     // @todo refactor method to accept multiple conditions.
-    const results = await supabase
-      .from(this._table)
-      .select(columns);
+    const results = await supabase.from(this._table).select(columns);
 
     return results;
   }
-
 }
 
 export default class ProfileClient extends BaseClient {
-
   _table = 'profile';
 
   async update(id: string, profile: Partial<Profile>) {
@@ -87,7 +80,7 @@ export default class ProfileClient extends BaseClient {
       is_subscribed: profile?.is_subscribed,
       interval: profile?.interval,
       stripe_customer: profile?.stripe_customer,
-      email: profile?.email
+      email: profile?.email,
     } as Profile;
   }
 
@@ -96,5 +89,4 @@ export default class ProfileClient extends BaseClient {
 
     return profiles;
   }
-
 }

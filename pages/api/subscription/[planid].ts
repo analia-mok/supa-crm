@@ -1,10 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { supabase } from "../../../utils/supabase";
+import { supabase } from '../../../utils/supabase';
 import cookie from 'cookie';
 import { Session } from '@supabase/supabase-js';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-
   const { user } = await supabase.auth.api.getUserByCookie(req);
 
   if (!user || !req.headers.cookie) {
@@ -20,21 +19,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const session: Session = {
       access_token: token,
       token_type: 'bearer',
-      user
-     };
+      user,
+    };
 
     return session;
   };
 
-  const { data: { stripe_customer }} = await supabase
-    .from('profile')
-    .select('stripe_customer')
-    .eq('id', user.id)
-    .single();
+  const {
+    data: { stripe_customer },
+  } = await supabase.from('profile').select('stripe_customer').eq('id', user.id).single();
 
   res.send({
     ...user,
-    stripe_customer
+    stripe_customer,
   });
 };
 

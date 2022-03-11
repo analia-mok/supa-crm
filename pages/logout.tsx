@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 import { useUser } from '../context/user';
 
 const Logout = () => {

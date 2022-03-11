@@ -5,16 +5,16 @@ const Nav = () => {
   const { user } = useUser();
 
   return (
-    <nav className='px-8 py-4 border-b-2 border-gray-200' aria-label='Main Navigation'>
+    <nav className="border-b-2 border-gray-200 px-8 py-4" aria-label="Main Navigation">
       <div className="container mx-auto">
         <div className="flex">
           <Link href={user ? '/logout' : '/login'}>
-            <a className='ml-auto'>{user ? 'Logout' : 'Login'}</a>
+            <a className="ml-auto">{user ? 'Logout' : 'Login'}</a>
           </Link>
         </div>
       </div>
     </nav>
-  )
+  );
 };
 
 export default Nav;

@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { stripe } from '../../utils/stripe';
 import { supabase } from '../../utils/supabase';
 
@@ -11,7 +11,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     email: req.body.record.email,
   });
 
-  await supabase.from('profile')
+  await supabase
+    .from('profile')
     .update({
       stripe_customer: customer.id,
     })

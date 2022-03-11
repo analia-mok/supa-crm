@@ -1,12 +1,12 @@
-import { Organization } from "../lib/types";
-import { supabase } from "../utils/supabase";
-import Link from "next/link";
+import { Organization } from '../lib/types';
+import { supabase } from '../utils/supabase';
+import Link from 'next/link';
 
 interface OrganizationsProps {
-  organizations: Organization[]
+  organizations: Organization[];
 }
 
-export default function Organizations (props: OrganizationsProps) {
+export default function Organizations(props: OrganizationsProps) {
   const { organizations } = props;
 
   // @todo research how to auth restrict pages?
@@ -16,28 +16,32 @@ export default function Organizations (props: OrganizationsProps) {
   return (
     <section>
       <section className="mb-8">
-        <Link href='/organization/create'>
-          <a className="inline-block bg-indigo-600 text-white text-opacity-95 py-2 px-4 rounded-md">Add Organization</a>
+        <Link href="/organization/create">
+          <a className="inline-block rounded-md bg-indigo-600 py-2 px-4 text-white text-opacity-95">
+            Add Organization
+          </a>
         </Link>
       </section>
 
-      <div className="rounded-xl overflow-hidden border border-slate-300">
-        <table className="w-full border-collapse text-slate-900 table-auto">
+      <div className="overflow-hidden rounded-xl border border-slate-300">
+        <table className="w-full table-auto border-collapse text-slate-900">
           <thead>
-            <th className="text-left bg-slate-100 px-6 py-2">Name</th>
-            <th className="text-left bg-slate-100 px-6 py-2">Contact</th>
-            <th className="text-left bg-slate-100 px-6 py-2">Location</th>
-            <th className="text-left bg-slate-100 px-6 py-2"></th>
+            <th className="bg-slate-100 px-6 py-2 text-left">Name</th>
+            <th className="bg-slate-100 px-6 py-2 text-left">Contact</th>
+            <th className="bg-slate-100 px-6 py-2 text-left">Location</th>
+            <th className="bg-slate-100 px-6 py-2 text-left"></th>
           </thead>
           <tbody>
-            {organizations.map(org => (
+            {organizations.map((org) => (
               <tr key={org.id}>
                 <td className="border-t border-slate-300 px-6 py-3">{org.name}</td>
                 <td className="border-t border-slate-300 px-6 py-3">{org.email}</td>
-                <td className="border-t border-slate-300 px-6 py-3">{org.city}, {org.state}</td>
+                <td className="border-t border-slate-300 px-6 py-3">
+                  {org.city}, {org.state}
+                </td>
                 <td className="border-t border-slate-300 px-6 py-3">
                   <Link key={org.id} href={`/organization/${org.id}`}>
-                    <a className='hover:underline text-indigo-600'>Edit</a>
+                    <a className="text-indigo-600 hover:underline">Edit</a>
                   </Link>
                 </td>
               </tr>
@@ -45,17 +49,16 @@ export default function Organizations (props: OrganizationsProps) {
           </tbody>
         </table>
       </div>
-
     </section>
-  )
-};
+  );
+}
 
 export const getStaticProps = async () => {
   const { data: organizations } = await supabase.from('organization').select('*');
 
   return {
     props: {
-      organizations
-    }
+      organizations,
+    },
   };
-}
+};

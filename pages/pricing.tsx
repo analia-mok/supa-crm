@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Plan } from '../lib/types';
 
 interface PricingPageProps {
-  plans: Plan[]
+  plans: Plan[];
 }
 
 const Pricing = (props: PricingPageProps) => {
@@ -26,48 +26,52 @@ const Pricing = (props: PricingPageProps) => {
         <h1 className="text-3xl font-bold">Pricing</h1>
       </header>
       <div className="container mx-auto flex justify-center">
-        {plans.map(plan => (
-          <div key={plan.id} className="flex-1 px-8 py-4 mx-4 border-2 border-gray-300">
-            <h2 className="text-xl mb-2">{plan.name}</h2>
-            <p>${plan.price / 100} {plan.currency.toUpperCase()} / {plan.interval}</p>
-            {
-              !isLoading && (
-                <div>
-                  {showSubscribeButton && <button onClick={processSubscription(plan.id)}>Subscribe</button>}
-                  {showCreateAccountButton && <button onClick={login}>Create Account</button>}
-                  {showManageSubscriptionButton && <button>Manage Subscription</button>}
-                </div>
-              )
-            }
+        {plans.map((plan) => (
+          <div key={plan.id} className="mx-4 flex-1 border-2 border-gray-300 px-8 py-4">
+            <h2 className="mb-2 text-xl">{plan.name}</h2>
+            <p>
+              ${plan.price / 100} {plan.currency.toUpperCase()} / {plan.interval}
+            </p>
+            {!isLoading && (
+              <div>
+                {showSubscribeButton && (
+                  <button onClick={processSubscription(plan.id)}>Subscribe</button>
+                )}
+                {showCreateAccountButton && <button onClick={login}>Create Account</button>}
+                {showManageSubscriptionButton && <button>Manage Subscription</button>}
+              </div>
+            )}
           </div>
         ))}
       </div>
     </article>
   );
-}
+};
 
-export const getStaticProps =  async () => {
+export const getStaticProps = async () => {
   const { data: prices } = await stripe.prices.list();
 
-  const plans = await Promise.all(prices.map(async (price) => {
-    const product = await stripe.products.retrieve(price.product.toString());
+  const plans = await Promise.all(
+    prices.map(async (price) => {
+      const product = await stripe.products.retrieve(price.product.toString());
 
-    return {
-      id: product.id,
-      name: product.name,
-      price: price.unit_amount || 0,
-      interval: price.recurring?.interval,
-      currency: price.currency
-    };
-  }));
+      return {
+        id: product.id,
+        name: product.name,
+        price: price.unit_amount || 0,
+        interval: price.recurring?.interval,
+        currency: price.currency,
+      };
+    })
+  );
 
   const sortedPlans = plans.sort((a, b) => a.price - b.price);
 
   return {
     props: {
-      plans: sortedPlans
-    }
+      plans: sortedPlans,
+    },
   };
-}
+};
 
 export default Pricing;

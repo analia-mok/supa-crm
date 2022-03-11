@@ -3,7 +3,7 @@ import { useUser } from '../context/user';
 import { Organization } from '../lib/types';
 
 interface HomeProps {
-  organizations: Organization[]
+  organizations: Organization[];
 }
 
 export default function Home(props: HomeProps) {
@@ -11,10 +11,8 @@ export default function Home(props: HomeProps) {
   console.log(user);
 
   return (
-    <div>
-      {user && <h1>Welcome back, {user?.identities[0]?.identity_data?.full_name}!</h1>}
-    </div>
-  )
+    <div>{user && <h1>Welcome back, {user?.identities[0]?.identity_data?.full_name}!</h1>}</div>
+  );
 }
 
 export const getStaticProps = async () => {
@@ -22,7 +20,7 @@ export const getStaticProps = async () => {
 
   return {
     props: {
-      organizations
-    }
+      organizations,
+    },
   };
-}
+};

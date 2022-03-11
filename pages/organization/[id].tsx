@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Video from 'react-player';
 
 interface OrganizationDetailsProps {
-  organization: Organization
+  organization: Organization;
 }
 
 const OrganizationDetails = (props: OrganizationDetailsProps) => {
@@ -18,7 +18,8 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
   // @todo replace with actual CRM features.
   // Done for the sake of tutorial.
   const getPremiumContent = async () => {
-    const { data } = await supabase.from('premium_content')
+    const { data } = await supabase
+      .from('premium_content')
       .select('video')
       .eq('id', organization.id)
       .single();
@@ -32,13 +33,15 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
 
   return (
     <div>
-      <section className='mb-8'>
+      <section className="mb-8">
         <Link href="/organizations">
-          <a className='inline-flex text-slate-800 items-center content-center hover:underline hover:text-slate-600 transition-colors duration-100'><ArrowNarrowLeftIcon className='w-5 h-5 text-slate-800 mr-2'/> Back to Organizations</a>
+          <a className="inline-flex content-center items-center text-slate-800 transition-colors duration-100 hover:text-slate-600 hover:underline">
+            <ArrowNarrowLeftIcon className="mr-2 h-5 w-5 text-slate-800" /> Back to Organizations
+          </a>
         </Link>
       </section>
       <article>
-        <h1 className='text-3xl mb-4 font-bold'>{organization.name}</h1>
+        <h1 className="mb-4 text-3xl font-bold">{organization.name}</h1>
         <p>{organization.address1}</p>
         {!!videoUrl && <Video url={videoUrl} width="100%" />}
       </article>
@@ -47,26 +50,24 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
 };
 
 export const getStaticPaths = async () => {
-  const { data: organizations } = await supabase
-    .from('organization')
-    .select('id');
+  const { data: organizations } = await supabase.from('organization').select('id');
 
   const paths = organizations?.map(({ id }) => {
     return {
       params: {
-        id: id.toString()
-      }
+        id: id.toString(),
+      },
     };
   });
 
   return {
     paths,
-    fallback: false
+    fallback: false,
   };
 };
 
 interface OrganizationDetailParams extends ParsedUrlQuery {
-  id: string
+  id: string;
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
@@ -79,8 +80,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      organization
-    }
+      organization,
+    },
   };
 };
 

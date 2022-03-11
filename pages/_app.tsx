@@ -9,9 +9,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <UserProvider>
       <div className="flex min-h-screen">
         <Sidebar />
-        <div className='flex-grow'>
+        <div className="flex-grow">
           <Nav />
-          <main className='px-10 py-8 max-w-5xl'>
+          <main className="max-w-5xl px-10 py-8">
             <Component {...pageProps} />
           </main>
         </div>
@@ -20,4 +20,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp
+export default MyApp;
