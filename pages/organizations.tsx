@@ -1,6 +1,7 @@
 import { Organization } from '../lib/types';
 import { supabase } from '../utils/supabase';
 import Link from 'next/link';
+import { withAuthRequired } from '@supabase/supabase-auth-helpers/nextjs';
 
 interface OrganizationsProps {
   organizations: Organization[];
@@ -37,7 +38,9 @@ export default function Organizations(props: OrganizationsProps) {
                 <td className="border-t border-slate-300 px-6 py-3">{org.name}</td>
                 <td className="border-t border-slate-300 px-6 py-3">{org.email}</td>
                 <td className="border-t border-slate-300 px-6 py-3">
-                  {org.city}, {org.state}
+                  {org.city}
+                  {org.city && org.state && ', '}
+                  {org.state}
                 </td>
                 <td className="border-t border-slate-300 px-6 py-3">
                   <Link key={org.id} href={`/organization/${org.id}`}>
@@ -52,6 +55,9 @@ export default function Organizations(props: OrganizationsProps) {
     </section>
   );
 }
+
+// TODO: Research methods to auth protect this page.
+// export const getServerSideProps = withAuthRequired({ redirectTo: '/' });
 
 export const getStaticProps = async () => {
   const { data: organizations } = await supabase.from('organization').select('*');

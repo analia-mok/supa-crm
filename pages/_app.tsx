@@ -1,8 +1,8 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import UserProvider from '../context/user';
-import Nav from '../components/nav';
-import Sidebar from '../components/sidebar';
+import Nav from '../components/Nav';
+import Sidebar from '../components/Sidebar';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

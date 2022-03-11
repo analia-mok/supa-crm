@@ -3,9 +3,9 @@ import { GetStaticProps } from 'next';
 import { Organization } from '../../lib/types';
 import { ParsedUrlQuery } from 'querystring';
 import { supabase } from '../../utils/supabase';
-import { useState, useEffect } from 'react';
+import { FormEvent, useState } from 'react';
 import Link from 'next/link';
-import Video from 'react-player';
+import OrganizationForm from '../../components/forms/OrganizationForm';
 
 interface OrganizationDetailsProps {
   organization: Organization;
@@ -13,26 +13,57 @@ interface OrganizationDetailsProps {
 
 const OrganizationDetails = (props: OrganizationDetailsProps) => {
   const { organization } = props;
-  const [videoUrl, setVideoUrl] = useState();
+  const [error, setError] = useState();
+  const [result, setResult] = useState('');
 
-  // @todo replace with actual CRM features.
-  // Done for the sake of tutorial.
-  const getPremiumContent = async () => {
-    const { data } = await supabase
-      .from('premium_content')
-      .select('video')
-      .eq('id', organization.id)
-      .single();
+  const update = async (event: FormEvent) => {
+    event.preventDefault();
 
-    setVideoUrl(data?.video);
+    setError(null);
+    setResult('');
+
+    const formData = new FormData(event.target as HTMLFormElement);
+    const updatedOrganization: { [key: string]: any } = {};
+
+    for (var pair of formData.entries()) {
+      const column: string = pair[0];
+      updatedOrganization[column] = pair[1];
+    }
+
+    const { data, error } = await supabase
+      .from('organization')
+      .update(updatedOrganization)
+      .eq('id', `${organization.id}`);
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setResult('Successfully updated!');
+    }
+
+    return true;
   };
 
-  useEffect(() => {
-    getPremiumContent();
-  });
+  // const [videoUrl, setVideoUrl] = useState();
+
+  // // @todo replace with actual CRM features.
+  // // Done for the sake of tutorial.
+  // const getPremiumContent = async () => {
+  //   const { data } = await supabase
+  //     .from('premium_content')
+  //     .select('video')
+  //     .eq('id', organization.id)
+  //     .single();
+
+  //   setVideoUrl(data?.video);
+  // };
+
+  // useEffect(() => {
+  //   getPremiumContent();
+  // });
 
   return (
-    <div>
+    <div className="max-w-5xl">
       <section className="mb-8">
         <Link href="/organizations">
           <a className="inline-flex content-center items-center text-slate-800 transition-colors duration-100 hover:text-slate-600 hover:underline">
@@ -41,9 +72,14 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
         </Link>
       </section>
       <article>
+        {error && (
+          <p className="mb-8 max-w-lg rounded-md bg-rose-200 px-4 py-2 text-rose-800">{error}</p>
+        )}
+        {result && (
+          <p className="mb-8 max-w-lg rounded-md bg-green-200 px-4 py-2 text-green-800">{result}</p>
+        )}
         <h1 className="mb-4 text-3xl font-bold">{organization.name}</h1>
-        <p>{organization.address1}</p>
-        {!!videoUrl && <Video url={videoUrl} width="100%" />}
+        <OrganizationForm submitCallback={update} organization={organization} />
       </article>
     </div>
   );

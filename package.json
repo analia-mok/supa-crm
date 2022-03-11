@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
+    "@supabase/supabase-auth-helpers": "^1.2.2",
     "@supabase/supabase-js": "^1.29.4",
     "axios": "^0.26.0",
     "cookie": "^0.4.2",
