@@ -5,7 +5,7 @@ export default class OrganizationClient extends BaseClient {
   _table = 'organization';
 
   async update(id: string, organization: Partial<Organization>) {
-    await super.update(id, organization);
+    return await super.update(id, organization);
   }
 
   async getSingle(id: string, columns = '*'): Promise<Organization> {

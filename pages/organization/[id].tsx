@@ -7,6 +7,7 @@ import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import OrganizationForm from '../../components/forms/OrganizationForm';
 import OrganizationClient from '../../lib/organizationClient';
+import { useRouter } from 'next/router';
 
 interface OrganizationDetailsProps {
   organization: Organization;
@@ -14,13 +15,14 @@ interface OrganizationDetailsProps {
 
 const OrganizationDetails = (props: OrganizationDetailsProps) => {
   const { organization } = props;
-  const [error, setError] = useState();
+  const router = useRouter();
+  const [error, setError] = useState('');
   const [result, setResult] = useState('');
 
   const update = async (event: FormEvent) => {
     event.preventDefault();
 
-    setError(null);
+    setError('');
     setResult('');
 
     const formData = new FormData(event.target as HTMLFormElement);
@@ -31,10 +33,7 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
       updatedOrganization[column] = pair[1];
     }
 
-    const { data, error } = await supabase
-      .from('organization')
-      .update(updatedOrganization)
-      .eq('id', `${organization.id}`);
+    const { error } = await new OrganizationClient().update(organization.id, updatedOrganization);
 
     if (error) {
       setError(error.message);
@@ -45,23 +44,23 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
     return true;
   };
 
-  // const [videoUrl, setVideoUrl] = useState();
+  const deleteOrg = async (event: FormEvent) => {
+    event.preventDefault();
 
-  // // @todo replace with actual CRM features.
-  // // Done for the sake of tutorial.
-  // const getPremiumContent = async () => {
-  //   const { data } = await supabase
-  //     .from('premium_content')
-  //     .select('video')
-  //     .eq('id', organization.id)
-  //     .single();
+    setError('');
+    setResult('');
 
-  //   setVideoUrl(data?.video);
-  // };
+    const { error } = await new OrganizationClient().delete(organization.id);
 
-  // useEffect(() => {
-  //   getPremiumContent();
-  // });
+    if (error) {
+      setError(error.message);
+    } else {
+      // @todo add support for toast notifications in redirect page.
+      setResult('Successfully deleted!');
+      console.log('Successfully deleted!');
+      router.push('/organizations');
+    }
+  };
 
   return (
     <div className="max-w-5xl">
@@ -81,18 +80,18 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
         )}
         <h1 className="mb-4 text-3xl font-bold">{organization.name}</h1>
         <OrganizationForm submitCallback={update} organization={organization}>
-          {/* @todo: Replace with a delete confirmation modal */}
-          <Link href={`/organization/${organization.id}/delete`}>
-            <a
-              className="
+          {/* @todo Add a delete confirmation modal */}
+          {/* @todo Add disabled state */}
+          <button
+            className="
               inline-block rounded-md border border-slate-700 py-2 px-4 text-slate-700
               transition-colors duration-300
               hover:bg-slate-700 hover:text-slate-100
               focus:bg-slate-700 focus:text-slate-100"
-            >
-              Delete
-            </a>
-          </Link>
+            onClick={deleteOrg}
+          >
+            Delete
+          </button>
         </OrganizationForm>
       </article>
     </div>

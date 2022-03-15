@@ -5,14 +5,14 @@ import { supabase } from '../../utils/supabase';
 import OrganizationForm from '../../components/forms/OrganizationForm';
 
 export default function CreateOrganization() {
-  const [error, setError] = useState();
+  const [error, setError] = useState('');
   const [result, setResult] = useState('');
 
   // TODO: Auth protect page.
   const create = async (event: FormEvent) => {
     event.preventDefault();
 
-    setError(null);
+    setError('');
     setResult('');
 
     const formData = new FormData(event.target as HTMLFormElement);
@@ -23,7 +23,7 @@ export default function CreateOrganization() {
       organization[column] = pair[1];
     }
 
-    const { data, error } = await supabase.from('organization').insert(organization);
+    const { error } = await supabase.from('organization').insert(organization);
 
     if (error) {
       setError(error.message);

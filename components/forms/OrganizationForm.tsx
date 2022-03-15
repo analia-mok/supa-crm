@@ -26,7 +26,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             className="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:ring-purple-600"
             required
             autoComplete="false"
-            defaultValue={organization.name ?? ''}
+            defaultValue={organization?.name ?? ''}
           />
         </label>
       </div>

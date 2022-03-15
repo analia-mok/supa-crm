@@ -12,19 +12,11 @@ export default class BaseClient {
   }
 
   async update(id: string, value: any) {
-    const { error } = await supabase.from(this._table).update(value).eq('id', id);
-
-    if (error) {
-      console.error(error.message);
-    }
+    return await supabase.from(this._table).update(value).eq('id', id);
   }
 
-  async delete(id: string, value: any) {
-    const { error } = await supabase.from(this._table).delete(value).eq('id', id);
-
-    if (error) {
-      console.error(error.message);
-    }
+  async delete(id: string) {
+    return await supabase.from(this._table).delete().eq('id', id);
   }
 
   /**
