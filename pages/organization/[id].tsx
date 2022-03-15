@@ -6,6 +6,7 @@ import { supabase } from '../../utils/supabase';
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import OrganizationForm from '../../components/forms/OrganizationForm';
+import OrganizationClient from '../../lib/organizationClient';
 
 interface OrganizationDetailsProps {
   organization: Organization;
@@ -71,7 +72,7 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
           </a>
         </Link>
       </section>
-      <article>
+      <article className="pb-8">
         {error && (
           <p className="mb-8 max-w-lg rounded-md bg-rose-200 px-4 py-2 text-rose-800">{error}</p>
         )}
@@ -79,7 +80,20 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
           <p className="mb-8 max-w-lg rounded-md bg-green-200 px-4 py-2 text-green-800">{result}</p>
         )}
         <h1 className="mb-4 text-3xl font-bold">{organization.name}</h1>
-        <OrganizationForm submitCallback={update} organization={organization} />
+        <OrganizationForm submitCallback={update} organization={organization}>
+          {/* @todo: Replace with a delete confirmation modal */}
+          <Link href={`/organization/${organization.id}/delete`}>
+            <a
+              className="
+              inline-block rounded-md border border-slate-700 py-2 px-4 text-slate-700
+              transition-colors duration-300
+              hover:bg-slate-700 hover:text-slate-100
+              focus:bg-slate-700 focus:text-slate-100"
+            >
+              Delete
+            </a>
+          </Link>
+        </OrganizationForm>
       </article>
     </div>
   );
@@ -108,11 +122,7 @@ interface OrganizationDetailParams extends ParsedUrlQuery {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as OrganizationDetailParams;
-  const { data: organization } = await supabase
-    .from('organization')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const organization = await new OrganizationClient().getSingle(id);
 
   return {
     props: {

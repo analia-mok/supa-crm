@@ -2,6 +2,7 @@ import { Organization } from '../lib/types';
 import { supabase } from '../utils/supabase';
 import Link from 'next/link';
 import { withAuthRequired } from '@supabase/supabase-auth-helpers/nextjs';
+import OrganizationClient from '../lib/organizationClient';
 
 interface OrganizationsProps {
   organizations: Organization[];
@@ -14,6 +15,7 @@ export default function Organizations(props: OrganizationsProps) {
   // @todo create dedicated table component.
   // @todo Create a modal component for create content.
   // @todo Create a modal component to verify deletion.
+  // @todo Switch to useSWR instead of static props?
   return (
     <section>
       <section className="mb-8">
@@ -56,11 +58,11 @@ export default function Organizations(props: OrganizationsProps) {
   );
 }
 
-// TODO: Research methods to auth protect this page.
+// @todo Research methods to auth protect this page.
 // export const getServerSideProps = withAuthRequired({ redirectTo: '/' });
 
 export const getStaticProps = async () => {
-  const { data: organizations } = await supabase.from('organization').select('*');
+  const organizations = await new OrganizationClient().get();
 
   return {
     props: {

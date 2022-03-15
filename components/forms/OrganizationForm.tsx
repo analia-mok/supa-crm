@@ -4,9 +4,12 @@ import { Organization } from '../../lib/types';
 export interface OrganizationFormProps {
   submitCallback: (event: FormEvent) => Promise<boolean>;
   organization?: Organization;
+  children?: React.ReactNode;
 }
 
 const OrganizationForm = (props: OrganizationFormProps) => {
+  const { organization, children } = props;
+
   return (
     <form onSubmit={props.submitCallback} className="max-w-lg">
       <div className="mb-6 flex flex-wrap md:flex-nowrap">
@@ -23,7 +26,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             className="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:ring-purple-600"
             required
             autoComplete="false"
-            defaultValue={props.organization?.name ?? ''}
+            defaultValue={organization.name ?? ''}
           />
         </label>
       </div>
@@ -40,7 +43,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             name="email"
             className="mt-2 block w-full rounded-md border-slate-300 placeholder-slate-400 shadow-sm focus:ring-purple-600"
             placeholder="johndoe@email.com"
-            defaultValue={props.organization?.email ?? ''}
+            defaultValue={organization?.email ?? ''}
             required
           />
         </label>
@@ -51,7 +54,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             name="phone"
             className="mt-2 block w-full rounded-md border-slate-300 placeholder-slate-400 shadow-sm focus:ring-purple-600"
             placeholder="###-###-####"
-            defaultValue={props.organization?.phone ?? ''}
+            defaultValue={organization?.phone ?? ''}
           />
         </label>
       </div>
@@ -62,7 +65,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             type="text"
             name="address1"
             className="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:ring-purple-600"
-            defaultValue={props.organization?.address1 ?? ''}
+            defaultValue={organization?.address1 ?? ''}
           />
         </label>
       </div>
@@ -73,7 +76,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             type="text"
             name="address2"
             className="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:ring-purple-600"
-            defaultValue={props.organization?.address2 ?? ''}
+            defaultValue={organization?.address2 ?? ''}
           />
         </label>
       </div>
@@ -84,7 +87,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             type="text"
             name="city"
             className="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:ring-purple-600"
-            defaultValue={props.organization?.city ?? ''}
+            defaultValue={organization?.city ?? ''}
           />
         </label>
         {/* TODO: Lookup more general name? Locality? Administrative Area? */}
@@ -95,7 +98,7 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             type="text"
             name="state"
             className="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:ring-purple-600"
-            defaultValue={props.organization?.state ?? ''}
+            defaultValue={organization?.state ?? ''}
           />
         </label>
       </div>
@@ -106,18 +109,23 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             type="text"
             name="postal_code"
             className="mt-2 block w-full rounded-md border-slate-300 shadow-sm focus:ring-purple-600"
-            defaultValue={props.organization?.postal_code ?? ''}
+            defaultValue={organization?.postal_code ?? ''}
           />
         </label>
         <div className="w-1/2" aria-hidden></div>
       </div>
-      <div className="mt-8">
+      <div className="mt-8 flex justify-between">
         <button
           type="submit"
-          className="inline-block rounded-md bg-indigo-600 py-2 px-4 text-white text-opacity-95"
+          className="
+            inline-block rounded-md bg-indigo-600 py-2 px-4 text-white text-opacity-95
+            transition-colors duration-300
+            hover:bg-indigo-100 hover:text-indigo-600
+            focus:bg-indigo-100 focus:text-indigo-600"
         >
-          {props.organization ? 'Update' : 'Create'}
+          {organization ? 'Update' : 'Create'}
         </button>
+        {children}
       </div>
     </form>
   );
