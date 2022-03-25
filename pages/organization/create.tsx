@@ -2,20 +2,23 @@ import { ArrowNarrowLeftIcon } from '@heroicons/react/solid';
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '../../utils/supabase';
+import { withAuthRequired } from '@supabase/supabase-auth-helpers/nextjs';
 import OrganizationForm from '../../components/forms/OrganizationForm';
 
 export default function CreateOrganization() {
   const [error, setError] = useState('');
   const [result, setResult] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // TODO: Auth protect page.
   const create = async (event: FormEvent) => {
     event.preventDefault();
 
     setError('');
     setResult('');
+    setIsLoading(true);
 
-    const formData = new FormData(event.target as HTMLFormElement);
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
     const organization: { [key: string]: any } = {};
 
     for (var pair of formData.entries()) {
@@ -28,8 +31,11 @@ export default function CreateOrganization() {
     if (error) {
       setError(error.message);
     } else {
+      form.reset();
       setResult('Success!');
     }
+
+    setIsLoading(false);
 
     return true;
   };
@@ -50,8 +56,10 @@ export default function CreateOrganization() {
         {result && (
           <p className="mb-8 max-w-lg rounded-md bg-green-200 px-4 py-2 text-green-800">{result}</p>
         )}
-        <OrganizationForm submitCallback={create} />
+        <OrganizationForm submitCallback={create} isLoading={isLoading} />
       </section>
     </div>
   );
 }
+
+export const getServerSideProps = withAuthRequired({ redirectTo: '/' });

@@ -5,13 +5,14 @@ export interface OrganizationFormProps {
   submitCallback: (event: FormEvent) => Promise<boolean>;
   organization?: Organization;
   children?: React.ReactNode;
+  isLoading: boolean;
 }
 
 const OrganizationForm = (props: OrganizationFormProps) => {
-  const { organization, children } = props;
+  const { organization, children, isLoading, submitCallback } = props;
 
   return (
-    <form onSubmit={props.submitCallback} className="max-w-lg">
+    <form onSubmit={submitCallback} className="max-w-lg">
       <div className="mb-6 flex flex-wrap md:flex-nowrap">
         <label htmlFor="name" className="block w-full">
           <span>
@@ -121,7 +122,9 @@ const OrganizationForm = (props: OrganizationFormProps) => {
             inline-block rounded-md bg-indigo-600 py-2 px-4 text-white text-opacity-95
             transition-colors duration-300
             hover:bg-indigo-100 hover:text-indigo-600
-            focus:bg-indigo-100 focus:text-indigo-600"
+            focus:bg-indigo-100 focus:text-indigo-600
+            disabled:bg-slate-100 disabled:text-slate-600"
+          disabled={isLoading}
         >
           {organization ? 'Update' : 'Create'}
         </button>

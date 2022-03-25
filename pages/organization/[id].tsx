@@ -18,12 +18,14 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
   const router = useRouter();
   const [error, setError] = useState('');
   const [result, setResult] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const update = async (event: FormEvent) => {
     event.preventDefault();
 
     setError('');
     setResult('');
+    setIsLoading(true);
 
     const formData = new FormData(event.target as HTMLFormElement);
     const updatedOrganization: { [key: string]: any } = {};
@@ -41,6 +43,8 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
       setResult('Successfully updated!');
     }
 
+    setIsLoading(false);
+
     return true;
   };
 
@@ -49,8 +53,11 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
 
     setError('');
     setResult('');
+    setIsLoading(true);
 
     const { error } = await new OrganizationClient().delete(organization.id);
+
+    setIsLoading(false);
 
     if (error) {
       setError(error.message);
@@ -79,16 +86,18 @@ const OrganizationDetails = (props: OrganizationDetailsProps) => {
           <p className="mb-8 max-w-lg rounded-md bg-green-200 px-4 py-2 text-green-800">{result}</p>
         )}
         <h1 className="mb-4 text-3xl font-bold">{organization.name}</h1>
-        <OrganizationForm submitCallback={update} organization={organization}>
+        <OrganizationForm submitCallback={update} organization={organization} isLoading={isLoading}>
           {/* @todo Add a delete confirmation modal */}
           {/* @todo Add disabled state */}
           <button
             className="
-              inline-block rounded-md border border-slate-700 py-2 px-4 text-slate-700
+              inline-block text-slate-700 underline
               transition-colors duration-300
-              hover:bg-slate-700 hover:text-slate-100
-              focus:bg-slate-700 focus:text-slate-100"
+              hover:text-rose-500
+              focus:text-rose-500
+              disabled:text-slate-400"
             onClick={deleteOrg}
+            disabled={isLoading}
           >
             Delete
           </button>

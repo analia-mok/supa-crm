@@ -1,8 +1,8 @@
 import { Organization } from '../lib/types';
 import { supabase } from '../utils/supabase';
 import Link from 'next/link';
-import { withAuthRequired } from '@supabase/supabase-auth-helpers/nextjs';
 import OrganizationClient from '../lib/organizationClient';
+import { GetServerSideProps } from 'next';
 
 interface OrganizationsProps {
   organizations: Organization[];
@@ -11,11 +11,9 @@ interface OrganizationsProps {
 export default function Organizations(props: OrganizationsProps) {
   const { organizations } = props;
 
-  // @todo research how to auth restrict pages?
   // @todo create dedicated table component.
   // @todo Create a modal component for create content.
   // @todo Create a modal component to verify deletion.
-  // @todo Switch to useSWR instead of static props?
   return (
     <section>
       <section className="mb-8">
@@ -58,10 +56,19 @@ export default function Organizations(props: OrganizationsProps) {
   );
 }
 
-// @todo Research methods to auth protect this page.
-// export const getServerSideProps = withAuthRequired({ redirectTo: '/' });
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req, res } = context;
+  const user = await supabase.auth.api.getUserByCookie(req, res);
 
-export const getStaticProps = async () => {
+  if (!user.user) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
   const organizations = await new OrganizationClient().get();
 
   return {
