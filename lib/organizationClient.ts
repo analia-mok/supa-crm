@@ -1,6 +1,11 @@
 import BaseClient from './baseClient';
 import { Organization } from './types';
 
+export interface OrganizationResponse {
+  data: Organization[];
+  totalRows: number;
+}
+
 export default class OrganizationClient extends BaseClient {
   _table = 'organization';
 
@@ -24,9 +29,9 @@ export default class OrganizationClient extends BaseClient {
     } as Organization;
   }
 
-  async get(columns = '*'): Promise<Organization[]> {
-    const data = await super.get(columns);
+  async get(columns = '*', page = 0, limit = 10): Promise<OrganizationResponse> {
+    const results = await super.get(columns, page, limit);
 
-    return data;
+    return results;
   }
 }

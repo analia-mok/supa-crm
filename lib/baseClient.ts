@@ -1,3 +1,4 @@
+import { count } from 'console';
 import { supabase } from '../utils/supabase';
 
 export default class BaseClient {
@@ -38,11 +39,18 @@ export default class BaseClient {
    * @param columns Comma-separated list of columns to retrieve.
    * @returns List of all discovered rows.
    */
-  async get(columns = '*'): Promise<any> {
+  async get(columns = '*', page = 0, limit = 10): Promise<any> {
     // @todo refactor method to accept multiple conditions.
-    const results = await supabase.from(this._table).select(columns);
-    const data = results.data;
 
-    return data;
+    const from = page * limit;
+    const to = (page + 1) * limit - 1;
+
+    const { count } = await supabase.from(this._table).select('id', { count: 'estimated' });
+    const results = await supabase.from(this._table).select(columns).range(from, to);
+
+    return {
+      data: results.data,
+      totalRows: count,
+    };
   }
 }

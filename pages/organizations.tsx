@@ -6,10 +6,18 @@ import { GetServerSideProps } from 'next';
 
 interface OrganizationsProps {
   organizations: Organization[];
+  totalPages?: number;
 }
 
 export default function Organizations(props: OrganizationsProps) {
-  const { organizations } = props;
+  const { organizations, totalPages } = props;
+
+  const pagination: number[] = [];
+  const maximum = totalPages || 0;
+
+  for (let i = 0; i < maximum; i++) {
+    pagination.push(i);
+  }
 
   // @todo create dedicated table component.
   // @todo Create a modal component for create content.
@@ -52,12 +60,24 @@ export default function Organizations(props: OrganizationsProps) {
           </tbody>
         </table>
       </div>
+
+      {totalPages && (
+        <ul className="mt-8 flex">
+          {pagination.map((e) => (
+            <li key={`page_${e}`}>
+              <Link href={`/organizations?page=${e + 1}`}>
+                <a className="rounded-md border border-slate-300 py-2 px-4">{e + 1}</a>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req, res } = context;
+  const { req, res, query } = context;
   const user = await supabase.auth.api.getUserByCookie(req, res);
 
   if (!user.user) {
@@ -69,11 +89,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const organizations = await new OrganizationClient().get();
+  let pageNumber = 1;
+
+  // TODO: Research how to make pagination not require full page refreshes.
+  if (query.page) {
+    pageNumber = parseInt(query.page);
+  }
+
+  const { data: organizations, totalRows } = await new OrganizationClient().get(
+    '*',
+    pageNumber - 1,
+    5
+  );
+
+  const totalPages = totalRows ? Math.ceil(totalRows / 5) : null;
 
   return {
     props: {
       organizations,
+      totalPages,
     },
   };
 };
